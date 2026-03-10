@@ -1,16 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 // load functions
-require_once "../vendor/autoload.php";
-require_once "stats.php";
-require_once "card.php";
-require_once "cache.php";
+require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/stats.php";
+require_once __DIR__ . "/card.php";
+require_once __DIR__ . "/cache.php";
 
 // load .env
-$dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 1));
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . "/..");
 $dotenv->safeLoad();
+
+$_SERVER["TOKEN"] = $_SERVER["TOKEN"] ?? getenv("TOKEN") ?? $_ENV["TOKEN"] ?? null;
 
 // if environment variables are not loaded, display error
 if (!isset($_SERVER["TOKEN"])) {

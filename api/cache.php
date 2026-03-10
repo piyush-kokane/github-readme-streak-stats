@@ -54,7 +54,9 @@ function getCacheFilePath(string $key): string
 function ensureCacheDir(): bool
 {
     if (!is_dir(CACHE_DIR)) {
-        return mkdir(CACHE_DIR, 0755, true);
+        // suppress error on read-only filesystem (e.g. Vercel)
+        $result = @mkdir(CACHE_DIR, 0755, true);
+        return $result !== false;
     }
     return true;
 }
@@ -124,7 +126,7 @@ function getCachedStats(string $user, array $options = [], int $maxAge = CACHE_D
 function setCachedStats(string $user, array $options, array $stats): bool
 {
     if (!ensureCacheDir()) {
-        error_log("Failed to create cache directory: " . CACHE_DIR);
+        // silently skip caching on read-only filesystems
         return false;
     }
 
